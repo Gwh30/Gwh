@@ -12,6 +12,7 @@ class Detail extends StatefulWidget {
 }
 
 class _DetailState extends State<Detail> {
+  var _checkValue = false;
   List list = [];
   Future _detail() async {
     var data = {
@@ -61,6 +62,13 @@ class _DetailState extends State<Detail> {
           return Card(
             child: CheckboxListTile(
               contentPadding: EdgeInsets.only(left: 10.0, right: 10.0),
+              title: Text("${index + 1}"),
+              value: _checkValue,
+              onChanged: (value) {
+                setState(() {
+                  _checkValue = value;
+                });
+              },
             ),
           );
         },

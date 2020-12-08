@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:date_format/date_format.dart';
 import 'package:trackundemo/src/locations.dart' as locations;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -9,40 +8,115 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class RouteList extends StatefulWidget {
   String datas;
-  RouteList({Key key, this.datas}) : super(key: key);
+  String name;
+  RouteList({Key key, this.datas, this.name}) : super(key: key);
   @override
   _RouteListState createState() => _RouteListState();
 }
 
 class _RouteListState extends State<RouteList> {
+  var _time;
+  var _date;
   List list = [];
-  Future _getList() async {
+  Future _showDataPicker() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var data = {
+    Locale myLocale = Localizations.localeOf(context);
+    var picker = await showDateRangePicker(
+      context: context,
+      firstDate: DateTime(2010),
+      lastDate: DateTime(2030),
+      locale: myLocale,
+    );
+    var tpicker = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+        initialEntryMode: TimePickerEntryMode.input,
+        builder: (BuildContext context, Widget child) {
+          return MediaQuery(
+            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+            child: child,
+          );
+        });
+    setState(() {
+      _date = picker.toString();
+      String syear = picker.start.year.toString();
+      String smonth = picker.start.month.toString();
+      String sday = picker.start.day.toString();
+      if (smonth.length < 2) {
+        smonth = '0' + smonth;
+      } else {
+        smonth = smonth;
+      }
+      if (sday.length < 2) {
+        sday = '0' + sday;
+      } else {
+        sday = sday;
+      }
+      String startdate = syear + smonth + sday;
+      prefs.setString('startdate', startdate);
+      String eyear = picker.end.year.toString();
+      String emonth = picker.end.month.toString();
+      String eday = picker.end.day.toString();
+      if (emonth.length < 2) {
+        emonth = '0' + emonth;
+      } else {
+        emonth = emonth;
+      }
+      if (eday.length < 2) {
+        eday = '0' + eday;
+      } else {
+        eday = eday;
+      }
+      String enddate = eyear + emonth + eday;
+      prefs.setString('enddate', enddate);
+
+      _time = tpicker.toString();
+      String hour = tpicker.hour.toString();
+      String minute = tpicker.minute.toString();
+      if (hour.length < 2) {
+        hour = '0' + hour;
+      } else {
+        hour = hour;
+      }
+      if (minute.length < 2) {
+        minute = '0' + minute;
+      } else {
+        minute = minute;
+      }
+      String time = hour + minute + '00';
+      prefs.setString('time', time);
+    });
+    String startdate = prefs.getString('startdate');
+    String enddate = prefs.getString('enddate');
+    String time = prefs.getString('time');
+
+    var data;
+    var response;
+    data = {
       'pageNumber': '1',
       'pageSize': '100',
       'imei': '${widget.datas}',
-      'startData': '20201130',
-      'endData': '20201130',
+      'startDate': '$startdate',
+      'endDate': '$enddate',
       'startTime': '000000',
-      'endTime': '235959',
+      'endTime': '$time',
     };
     String token = prefs.getString('token');
     RequestOptions requestOptions =
         new RequestOptions(baseUrl: 'https://demo.trackun.jp', extra: {
       'context': context,
     }, headers: {
-      'Authorization': 'Bearer ${token}',
+      'Authorization': 'Bearer $token',
       'Content-Type': 'application/json;charset=utf-8',
     });
     CancelToken cancelToken;
-    // 862211044198299
-    var response = await HttpUtil().get(
-      '/v1.0/deviceData/byUser?pageNumber=1&pageSize=100&imei=${widget.datas}&startDate=20201127&endDate=20201127&startTime=000000&endTime=235959',
+    response = await HttpUtil().get(
+      '/v1.0/deviceData/byUser?pageNumber=1&pageSize=100&imei=${widget.datas}&startDate=$startdate&endDate=$enddate&startTime=000000&endTime=$time',
       data: data,
       options: requestOptions,
       cancelToken: cancelToken,
     );
+
     if (response.statusCode == 200) {
       setState(() {
         list = json.decode(response.data)['list'];
@@ -63,22 +137,24 @@ class _RouteListState extends State<RouteList> {
           );
           _markers[prefs.getString('uname' + i.toString())] = umarker;
         }
-
-        for (int i = 0; i < list.length; i++) {
-          prefs.remove('uname' + i.toString());
-          prefs.remove('ulat' + i.toString());
-          prefs.remove('ulng' + i.toString());
-        }
       });
     } else {
       print('Error${response.statusCode}');
     }
+
+    // for (int i = 0; i < list.length; i++) {
+    //   prefs.remove('uname' + i.toString());
+    //   prefs.remove('ulat' + i.toString());
+    //   prefs.remove('ulng' + i.toString());
+    // }
   }
 
   @override
   void initState() {
     super.initState();
-    _getList();
+    // _getList();
+    _showDataPicker();
+    _onMapCreated(mapController);
   }
 
   Iterable markers = [];
@@ -109,39 +185,16 @@ class _RouteListState extends State<RouteList> {
         Container(
           height: 50,
           width: 450,
-          child: RaisedButton(
-            child: Text('日付の選択'),
-            onPressed: () async {
-              var date = showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime(2010),
-                  lastDate: DateTime(2030),
-                  initialDatePickerMode: DatePickerMode.year,
-                  selectableDayPredicate: (date) {
-                    return date.difference(DateTime.now()).inMilliseconds < 0;
-                  });
-            },
+          child: Card(
+            child: ListTile(),
           ),
         ),
         Container(
           height: 50,
           width: 450,
           child: RaisedButton(
-            child: Text('時間の選択'),
-            onPressed: () async {
-              var result = showTimePicker(
-                  context: context,
-                  initialTime: TimeOfDay.now(),
-                  initialEntryMode: TimePickerEntryMode.input,
-                  builder: (BuildContext context, Widget child) {
-                    return MediaQuery(
-                      data: MediaQuery.of(context)
-                          .copyWith(alwaysUse24HourFormat: true),
-                      child: child,
-                    );
-                  });
-            },
+            child: Text('日付の選択'),
+            onPressed: () => _showDataPicker(),
           ),
         ),
         Container(
@@ -171,7 +224,7 @@ class _RouteListState extends State<RouteList> {
                     children: <Widget>[
                       Padding(
                         padding: const EdgeInsets.only(right: 10.0),
-                        child: Text("$index"),
+                        child: Text("${index + 1}"),
                       ),
                     ],
                   ),

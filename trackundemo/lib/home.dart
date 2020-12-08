@@ -41,7 +41,6 @@ class _HomePageState extends State<HomePage> {
       options: requestOptions,
       cancelToken: cancelToken,
     );
-// Utf8Decoder decode = new Utf8Decoder();
     if (response.statusCode == 200) {
       setState(() {
         list = json.decode(response.data)['list'];
@@ -55,7 +54,7 @@ class _HomePageState extends State<HomePage> {
 
         for (int i = 0; i < list.length; i++) {
           final umarker = Marker(
-            markerId: MarkerId(prefs.getString('name') + i.toString()),
+            markerId: MarkerId(prefs.getString('name' + i.toString())),
             position: LatLng(prefs.getDouble('lat' + i.toString()),
                 prefs.getDouble('lng' + i.toString())),
             infoWindow: InfoWindow(
@@ -74,6 +73,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _getData();
+    // _onMapCreated(mapController);
   }
 
   Future<void> _onMapCreated(GoogleMapController controller) async {

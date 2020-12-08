@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:trackundemo/datalist.dart';
 import 'package:trackundemo/drawer.dart';
 import 'package:trackundemo/home.dart';
+import 'package:trackundemo/page/detail.dart';
 import 'package:trackundemo/page/mixpage.dart';
 import 'package:trackundemo/page/routelist.dart';
 
@@ -90,17 +91,20 @@ class _IndexState extends State<IndexPage> {
                 ListTile(
                   title: Text('ドラッカー追跡'),
                   onTap: () {
-                    // Update the state of the app.
-                    // ...
-                    return HomePage();
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                      return HomePage();
+                    }));
                   },
                 ),
                 Divider(),
                 ListTile(
                   title: Text('デバイス管理'),
                   onTap: () {
-                    // Update the state of the app.
-                    // ...
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                      return Detail();
+                    }));
                   },
                 ),
               ],

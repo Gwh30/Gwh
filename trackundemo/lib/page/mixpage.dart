@@ -59,7 +59,6 @@ class _MixPageState extends State<MixPage> with TickerProviderStateMixin {
       options: requestOptions,
       cancelToken: cancelToken,
     );
-// Utf8Decoder decode = new Utf8Decoder();
     if (response.statusCode == 200) {
       setState(() {
         list = json.decode(response.data)['list'];
@@ -74,7 +73,7 @@ class _MixPageState extends State<MixPage> with TickerProviderStateMixin {
 
         for (int i = 0; i < list.length; i++) {
           final umarker = Marker(
-            markerId: MarkerId(prefs.getString('name') + i.toString()),
+            markerId: MarkerId(prefs.getString('name' + i.toString())),
             position: LatLng(prefs.getDouble('lat' + i.toString()),
                 prefs.getDouble('lng' + i.toString())),
             infoWindow: InfoWindow(
@@ -139,6 +138,7 @@ class _MixPageState extends State<MixPage> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     getData();
+    _onMapCreated(mapController);
   }
 
   Widget _itemBuilder(BuildContext context, int index) {
@@ -150,7 +150,7 @@ class _MixPageState extends State<MixPage> with TickerProviderStateMixin {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(right: 10.0),
-              child: Text("$index"),
+              child: Text("${index + 1}"),
             ),
           ],
         ),
@@ -180,6 +180,7 @@ class _MixPageState extends State<MixPage> with TickerProviderStateMixin {
             builder: (context) {
               return RouteList(
                 datas: list[index]["imei"],
+                name: list[index]["deviceName"],
               );
             },
           ));
