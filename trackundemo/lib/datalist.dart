@@ -59,21 +59,25 @@ class _DataListState extends State<DataList> {
         itemCount: list == null ? 0 : list.length,
         itemBuilder: (context, index) {
           return Card(
+            elevation: 3.0,
             child: ListTile(
               contentPadding: EdgeInsets.only(left: 10.0, right: 10.0),
               leading: Column(
                 mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.only(right: 10.0),
-                    child: Text("$index"),
+                    child: Text("${index + 1}"),
                   ),
                 ],
               ),
               title: Padding(
                 padding: EdgeInsets.only(bottom: 10.0),
                 child: Text(
-                  "トラッカー名:" + "           " + list[index]["deviceName"],
+                  "トラッカー名:" +
+                      "                      " +
+                      list[index]["deviceName"],
                   maxLines: 2,
                   textAlign: TextAlign.start,
                   overflow: TextOverflow.ellipsis,
@@ -84,40 +88,70 @@ class _DataListState extends State<DataList> {
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10.0),
-                    child: Text(
-                      "ドラッカーIMEI:" + "           " + list[index]["imei"],
-                      style: TextStyle(fontSize: 12.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          "ドラッカーIMEI:",
+                          style: TextStyle(fontSize: 12.0),
+                        ),
+                        Text(
+                          list[index]["imei"],
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(fontSize: 12.0),
+                        ),
+                      ],
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10.0),
-                    child: Text(
-                      "状態:" +
-                          "           " +
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            "状態:",
+                            style: TextStyle(fontSize: 12.0),
+                          ),
+                          Text(
+                            list[index]["batteryInfo"]["batteryPercentage"]
+                                    .toString() +
+                                "%",
+                            style: TextStyle(fontSize: 12.0),
+                          ),
+                        ]),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          "最後通信時間:",
+                          style: TextStyle(fontSize: 12.0),
+                        ),
+                        Text(
+                          list[index]["lastUpdateTime"],
+                          style: TextStyle(fontSize: 12.0),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          "最後電池レベル:",
+                          style: TextStyle(fontSize: 12.0),
+                        ),
+                        Text(
                           list[index]["batteryInfo"]["batteryPercentage"]
-                              .toString() +
-                          "%",
-                      style: TextStyle(fontSize: 12.0),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 10.0),
-                    child: Text(
-                      "最後通信時間:" + "           " + list[index]["lastUpdateTime"],
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 12.0),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 10.0),
-                    child: Text(
-                      "最後電池レベル:" +
-                          "           " +
-                          list[index]["batteryInfo"]["batteryPercentage"]
-                              .toString() +
-                          "%",
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 12.0),
+                                  .toString() +
+                              "%",
+                          style: TextStyle(fontSize: 12.0),
+                        ),
+                      ],
                     ),
                   ),
                   // Text(

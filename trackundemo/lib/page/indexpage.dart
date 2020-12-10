@@ -1,19 +1,49 @@
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trackundemo/datalist.dart';
 import 'package:trackundemo/drawer.dart';
 import 'package:trackundemo/home.dart';
 import 'package:trackundemo/page/detail.dart';
 import 'package:trackundemo/page/mixpage.dart';
 import 'package:trackundemo/page/routelist.dart';
+import 'package:trackundemo/util/http.dart';
 
 class IndexPage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() {
-    return _IndexState();
-  }
+  State<StatefulWidget> createState() => _IndexState();
 }
 
 class _IndexState extends State<IndexPage> {
+  Map map = {};
+  Future _getUserdata() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token');
+    RequestOptions requestOptions =
+        new RequestOptions(baseUrl: 'https://demo.trackun.jp', extra: {
+      'context': context,
+    }, headers: {
+      'Authorization': 'Bearer ${token}',
+      'Content-Type': 'application/json;charset=utf-8',
+    });
+    CancelToken cancelToken;
+
+    var response = await HttpUtil().get(
+      '/v1.0/user/info',
+      options: requestOptions,
+      cancelToken: cancelToken,
+    );
+    if (response.statusCode == 200) {
+      setState(() {
+        map = json.decode(response.data);
+      });
+    } else {
+      print('Error${response.statusCode}');
+    }
+  }
+
   final List<BottomNavigationBarItem> bottomNavItems = [
     BottomNavigationBarItem(
       backgroundColor: Colors.blue,
@@ -40,6 +70,7 @@ class _IndexState extends State<IndexPage> {
   void initState() {
     super.initState();
     currentIndex = 0;
+    _getUserdata();
   }
 
   @override

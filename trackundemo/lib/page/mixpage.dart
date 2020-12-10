@@ -62,14 +62,6 @@ class _MixPageState extends State<MixPage> with TickerProviderStateMixin {
     if (response.statusCode == 200) {
       setState(() {
         list = json.decode(response.data)['list'];
-        // for (int i = 0; i < list.length; i++) {
-        //   // prefs.setString('imei' + i.toString(), list[i]['imei']);
-        //   prefs.setString('name' + i.toString(), list[i]['deviceName']);
-        //   prefs.setDouble(
-        //       'lat' + i.toString(), list[i]['deviceLocation']['lat']);
-        //   prefs.setDouble(
-        //       'lng' + i.toString(), list[i]['deviceLocation']['lng']);
-        // }
 
         for (int i = 0; i < list.length; i++) {
           final umarker = Marker(
@@ -143,6 +135,7 @@ class _MixPageState extends State<MixPage> with TickerProviderStateMixin {
 
   Widget _itemBuilder(BuildContext context, int index) {
     return Card(
+      elevation: 3.0,
       child: ListTile(
         contentPadding: EdgeInsets.only(left: 10.0, right: 10.0),
         leading: Row(

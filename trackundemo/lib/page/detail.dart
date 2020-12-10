@@ -60,16 +60,17 @@ class _DetailState extends State<Detail> {
         itemCount: list == null ? 0 : list.length,
         itemBuilder: (context, index) {
           return Card(
+            elevation: 3.0,
             child: CheckboxListTile(
-              contentPadding: EdgeInsets.only(left: 10.0, right: 10.0),
-              title: Text("${index + 1}"),
-              value: _checkValue,
-              onChanged: (value) {
-                setState(() {
-                  _checkValue = value;
-                });
-              },
-            ),
+                contentPadding: EdgeInsets.only(left: 10.0, right: 10.0),
+                title: Text("${index + 1}"),
+                value: false,
+                onChanged: (value) {
+                  setState(() {
+                    _checkValue = value;
+                  });
+                },
+                controlAffinity: ListTileControlAffinity.trailing),
           );
         },
       ),

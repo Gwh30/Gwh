@@ -183,13 +183,43 @@ class _RouteListState extends State<RouteList> {
     return Column(
       children: <Widget>[
         Container(
-          height: 50,
-          width: 450,
-          child: Card(
-            child: ListTile(),
+          color: Colors.white,
+          height: 100,
+          child: Row(
+            children: <Widget>[
+              Text(
+                'トラッカー名:',
+                style: TextStyle(color: Colors.deepPurple, fontSize: 15.0),
+              ),
+              Text(
+                '${widget.name}',
+                style: TextStyle(color: Colors.deepPurple, fontSize: 20.0),
+              ),
+            ],
           ),
+          // child: Row(
+          //   children: <Widget>[
+          //     Card(
+          //       elevation: 3.0,
+          //       child: ListTile(
+          //         contentPadding: EdgeInsets.only(left: 10.0, right: 10.0),
+          //         title: Text('トラッカー名:'),
+          //         subtitle: Text('${widget.name}'),
+          //       ),
+          //     ),
+          //     Card(
+          //       elevation: 3.0,
+          //       child: ListTile(
+          //         contentPadding: EdgeInsets.only(left: 10.0, right: 10.0),
+          //         title: Text('位置履歴数:'),
+          //         subtitle: Text('${list.length}'),
+          //       ),
+          //     ),
+          //   ],
+          // ),
         ),
         Container(
+          color: Colors.white,
           height: 50,
           width: 450,
           child: RaisedButton(
@@ -198,8 +228,8 @@ class _RouteListState extends State<RouteList> {
           ),
         ),
         Container(
-          height: 290,
-          width: 450,
+          color: Colors.white,
+          height: 250,
           child: GoogleMap(
             onMapCreated: _onMapCreated,
             initialCameraPosition: CameraPosition(
@@ -211,8 +241,8 @@ class _RouteListState extends State<RouteList> {
           ),
         ),
         Container(
-          height: 280,
-          width: 450,
+          color: Colors.white,
+          height: 250,
           child: ListView.builder(
             itemCount: list == null ? 0 : list.length,
             itemBuilder: (context, index) {
@@ -230,67 +260,123 @@ class _RouteListState extends State<RouteList> {
                   ),
                   title: Padding(
                     padding: EdgeInsets.only(bottom: 10.0),
-                    child: Text(
-                      list[index]["date"].toString() +
-                          "           " +
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          list[index]["date"].toString(),
+                          maxLines: 2,
+                          textAlign: TextAlign.left,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              color: Colors.deepPurple, fontSize: 16.0),
+                        ),
+                        Text(
                           list[index]["time"].toString(),
-                      maxLines: 2,
-                      textAlign: TextAlign.start,
-                      overflow: TextOverflow.ellipsis,
-                      style:
-                          TextStyle(color: Colors.deepPurple, fontSize: 16.0),
+                          maxLines: 2,
+                          textAlign: TextAlign.left,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              color: Colors.deepPurple, fontSize: 16.0),
+                        ),
+                      ],
                     ),
                   ),
                   subtitle: Column(
                     children: <Widget>[
                       Padding(
                         padding: const EdgeInsets.only(bottom: 10.0),
-                        child: Text(
-                          "緯度:" + "           " + list[index]["lat"].toString(),
-                          style: TextStyle(fontSize: 12.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "緯度:",
+                              style: TextStyle(fontSize: 12.0),
+                            ),
+                            Text(
+                              list[index]["lat"].toString(),
+                              style: TextStyle(fontSize: 12.0),
+                              textAlign: TextAlign.left,
+                            ),
+                          ],
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(bottom: 10.0),
-                        child: Text(
-                          "経度:" + "           " + list[index]["lng"].toString(),
-                          style: TextStyle(fontSize: 12.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "経度:",
+                              style: TextStyle(fontSize: 12.0),
+                              textAlign: TextAlign.left,
+                            ),
+                            Text(
+                              list[index]["lng"].toString(),
+                              style: TextStyle(fontSize: 12.0),
+                              textAlign: TextAlign.left,
+                            ),
+                          ],
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(bottom: 10.0),
-                        child: Text(
-                          "精度:" +
-                              "           " +
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "精度:",
+                              style: TextStyle(fontSize: 12.0),
+                              textAlign: TextAlign.left,
+                            ),
+                            Text(
                               list[index]["accuracy"].toString(),
-                          style: TextStyle(fontSize: 12.0),
+                              style: TextStyle(fontSize: 12.0),
+                              textAlign: TextAlign.left,
+                            ),
+                          ],
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(bottom: 10.0),
-                        child: Text(
-                          "電波レベル:" +
-                              "           " +
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "電波レベル:",
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.left,
+                              style: TextStyle(fontSize: 12.0),
+                            ),
+                            Text(
                               list[index]["netSignal"].toString(),
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontSize: 12.0),
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.left,
+                              style: TextStyle(fontSize: 12.0),
+                            ),
+                          ],
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(bottom: 10.0),
-                        child: Text(
-                          "バッテリー:" +
-                              "           " +
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "バッテリー:",
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.left,
+                              style: TextStyle(fontSize: 12.0),
+                            ),
+                            Text(
                               list[index]["batterypercent"].toString(),
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontSize: 12.0),
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.left,
+                              style: TextStyle(fontSize: 12.0),
+                            ),
+                          ],
                         ),
                       ),
-                      // Text(
-                      //   list[index]["batteryInfo"]["batteryPercentage"].toString() +
-                      //       "%",
-                      //   style: TextStyle(fontSize: 12.0),
-                      // ),
                     ],
                   ),
                   // trailing: Text(list[index]["watchStatus"]["status"].toString()),
