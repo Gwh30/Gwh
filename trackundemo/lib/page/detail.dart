@@ -109,10 +109,17 @@ class _DetailState extends State<Detail> {
                           "デバイス名:",
                           style: TextStyle(fontSize: 12.0),
                         ),
-                        Text(
-                          list[index]["devicename"],
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontSize: 12.0),
+                        GestureDetector(
+                          child: Text(
+                            list[index]["devicename"],
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 12.0,
+                              color: Colors.blue,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                          onTap: () {},
                         ),
                       ],
                     ),
@@ -143,9 +150,16 @@ class _DetailState extends State<Detail> {
                           "バージョン",
                           style: TextStyle(fontSize: 12.0),
                         ),
-                        Text(
-                          list[index]["firmwareVersion"],
-                          style: TextStyle(fontSize: 12.0),
+                        GestureDetector(
+                          child: Text(
+                            list[index]["firmwareVersion"],
+                            style: TextStyle(
+                              fontSize: 12.0,
+                              color: Colors.blue,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                          onTap: () {},
                         ),
                       ],
                     ),
@@ -160,9 +174,16 @@ class _DetailState extends State<Detail> {
                           "位置取得手段:",
                           style: TextStyle(fontSize: 12.0),
                         ),
-                        Text(
-                          "GPS,LBS,WLAN",
-                          style: TextStyle(fontSize: 12.0),
+                        GestureDetector(
+                          child: Text(
+                            "GPS,LBS,WLAN",
+                            style: TextStyle(
+                              fontSize: 12.0,
+                              color: Colors.blue,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                          onTap: () {},
                         ),
                       ],
                     ),
