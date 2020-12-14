@@ -169,32 +169,3 @@ class _DataListState extends State<DataList> {
     );
   }
 }
-
-//     var data = {
-//   'pageNumber': '1',
-//   'pageSize': '100',
-// };
-// String token = StorageUtil().getString('token').then((token) {
-
-// });
-// RequestOptions requestOptions = new RequestOptions(headers: {
-//   'Authorization': 'Bearer $token',
-//   'Content-Type': 'application/json;charset=utf-8',
-// });
-// CancelToken cancelToken;
-
-// var response = await HttpUtil().get(
-//   'v1.0/deviceStatus/list?pageNumber=1&pageSize=100',
-//   data: data,
-//   options: requestOptions,
-//   cancelToken: cancelToken,
-// );
-// // Utf8Decoder decode = new Utf8Decoder();
-// if (response.statusCode == 200) {
-//   setState(() {
-//     list = json.decode(response.data)['list'];
-//     print(list);
-//   });
-// } else {
-//   print('Error${response.statusCode}');
-// }

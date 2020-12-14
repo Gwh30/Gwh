@@ -118,7 +118,15 @@ class _IndexState extends State<IndexPage> {
             child: ListView(
               padding: EdgeInsets.zero,
               children: <Widget>[
-                header,
+                UserAccountsDrawerHeader(
+                  accountName: Text(map['userInfo']['username']),
+                  accountEmail: Text(map['userInfo']['lastName'] +
+                      map['userInfo']['firstName']),
+                  onDetailsPressed: () {},
+                  currentAccountPicture: CircleAvatar(
+                    backgroundImage: AssetImage('assets/img/avatar.jpg'),
+                  ),
+                ),
                 ListTile(
                   title: Text('ドラッカー追跡'),
                   onTap: () {
@@ -138,63 +146,64 @@ class _IndexState extends State<IndexPage> {
                     }));
                   },
                 ),
+                Divider(),
               ],
             ),
           ),
         ),
       );
-  Widget header = DrawerHeader(
-    padding: EdgeInsets.zero,
-    /* padding置为0 */
-    child: new Stack(children: <Widget>[
-      /* 用stack来放背景图片 */
-      new Image.asset(
-        'images/p_h_r_600.png',
-        fit: BoxFit.fill,
-        width: double.infinity,
-      ),
-      new Align(
-        /* 先放置对齐 */
-        alignment: FractionalOffset.bottomLeft,
-        child: Container(
-          height: 70.0,
-          margin: EdgeInsets.only(left: 12.0, bottom: 12.0),
-          child: new Row(
-            mainAxisSize: MainAxisSize.min,
-            /* 宽度只用包住子组件即可 */
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              new CircleAvatar(
-                backgroundImage: AssetImage('images/pic1.jpg'),
-                radius: 35.0,
-              ),
-              new Container(
-                margin: EdgeInsets.only(left: 6.0),
-                child: new Column(
-                  crossAxisAlignment: CrossAxisAlignment.start, // 水平方向左对齐
-                  mainAxisAlignment: MainAxisAlignment.center, // 竖直方向居中
-                  children: <Widget>[
-                    new Text(
-                      "i-test",
-                      style: new TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.blue),
-                    ),
-                    new Text(
-                      "username",
-                      style: new TextStyle(fontSize: 14.0, color: Colors.blue),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    ]),
-  );
+  // Widget header = DrawerHeader(
+  //   padding: EdgeInsets.zero,
+  //   /* padding置为0 */
+  //   child: new Stack(children: <Widget>[
+  //     /* 用stack来放背景图片 */
+  //     new Image.asset(
+  //       'images/p_h_r_600.png',
+  //       fit: BoxFit.fill,
+  //       width: double.infinity,
+  //     ),
+  //     new Align(
+  //       /* 先放置对齐 */
+  //       alignment: FractionalOffset.bottomLeft,
+  //       child: Container(
+  //         height: 70.0,
+  //         margin: EdgeInsets.only(left: 12.0, bottom: 12.0),
+  //         child: new Row(
+  //           mainAxisSize: MainAxisSize.min,
+  //           /* 宽度只用包住子组件即可 */
+  //           crossAxisAlignment: CrossAxisAlignment.start,
+  //           mainAxisAlignment: MainAxisAlignment.start,
+  //           children: <Widget>[
+  //             new CircleAvatar(
+  //               backgroundImage: AssetImage('images/pic1.jpg'),
+  //               radius: 35.0,
+  //             ),
+  //             new Container(
+  //               margin: EdgeInsets.only(left: 6.0),
+  //               child: new Column(
+  //                 crossAxisAlignment: CrossAxisAlignment.start, // 水平方向左对齐
+  //                 mainAxisAlignment: MainAxisAlignment.center, // 竖直方向居中
+  //                 children: <Widget>[
+  //                   new Text(
+  //                     "i-test",
+  //                     style: new TextStyle(
+  //                         fontSize: 20.0,
+  //                         fontWeight: FontWeight.w400,
+  //                         color: Colors.blue),
+  //                   ),
+  //                   new Text(
+  //                     "username",
+  //                     style: new TextStyle(fontSize: 14.0, color: Colors.blue),
+  //                   ),
+  //                 ],
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   ]),
+  // );
 
   /*切换页面*/
   void _changePage(int index) {
