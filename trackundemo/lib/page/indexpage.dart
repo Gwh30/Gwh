@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trackundemo/datalist.dart';
 import 'package:trackundemo/drawer.dart';
 import 'package:trackundemo/home.dart';
+import 'package:trackundemo/login.dart';
 import 'package:trackundemo/page/detail.dart';
 import 'package:trackundemo/page/mixpage.dart';
 import 'package:trackundemo/page/routelist.dart';
@@ -42,6 +43,17 @@ class _IndexState extends State<IndexPage> {
     } else {
       print('Error${response.statusCode}');
     }
+  }
+
+  Future loginout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('token');
+
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) {
+        return LoginPage();
+      },
+    ));
   }
 
   final List<BottomNavigationBarItem> bottomNavItems = [
@@ -91,18 +103,26 @@ class _IndexState extends State<IndexPage> {
             title: Text("ドラッカー"),
             backgroundColor: Colors.blue[700],
             actions: <Widget>[
-              Builder(builder: (context) {
-                return IconButton(
-                  icon: Icon(Icons.add),
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) {
-                        return RouteList();
-                      }),
-                    );
-                  },
-                );
-              })
+              new PopupMenuButton(
+                onSelected: (value) {
+                  setState(() {
+                    value = value;
+                  });
+                },
+                itemBuilder: (BuildContext context) => <PopupMenuItem<String>>[
+                  new PopupMenuItem(
+                    child: new GestureDetector(
+                      child: new Text("ログアウト"),
+                      onTap: () => loginout(),
+                    ),
+                  ),
+                  new PopupMenuItem(
+                    child: new GestureDetector(
+                      child: new Text("ユーザー情報修正"),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
           bottomNavigationBar: BottomNavigationBar(
@@ -122,7 +142,19 @@ class _IndexState extends State<IndexPage> {
                   accountName: Text(map['userInfo']['username']),
                   accountEmail: Text(map['userInfo']['lastName'] +
                       map['userInfo']['firstName']),
-                  onDetailsPressed: () {},
+                  // onDetailsPressed: () {
+                  //   new PopupMenuItem(
+                  //     child: new GestureDetector(
+                  //       child: new Text("ログアウト"),
+                  //       onTap: () => loginout(),
+                  //     ),
+                  //   );
+                  //   new PopupMenuItem(
+                  //     child: new GestureDetector(
+                  //       child: new Text("ユーザー情報修正"),
+                  //     ),
+                  //   );
+                  // },
                   currentAccountPicture: CircleAvatar(
                     backgroundImage: AssetImage('assets/img/avatar.jpg'),
                   ),
