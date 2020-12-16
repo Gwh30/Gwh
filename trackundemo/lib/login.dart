@@ -1,7 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:trackundemo/page/indexpage.dart';
 import 'package:trackundemo/page/login/dologin.dart';
-
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -30,20 +30,19 @@ class _LoginPageState extends State<LoginPage> {
     if (res.statusCode == 200) {
       user = json.decode(res.data);
       print('登录成功');
-      String data = user['access_token'];
-      String ref = user['refresh_token'];
+      String token = user['access_token'];
+
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString('token', data);
-      prefs.setString('refreshtoken', ref);
+      prefs.setString('token', token);
     } else {
       print('Error${res.statusCode}');
     }
     Navigator.of(context).pop();
-    // Navigator.of(context).push(MaterialPageRoute(
-    //   builder: (context) {
-    //     return IndexPage();
-    //   },
-    // ));
+    Navigator.push(context, CupertinoPageRoute(
+      builder: (context) {
+        return IndexPage();
+      },
+    ));
   }
 
   @override
@@ -56,7 +55,7 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(height: 80.0),
             Column(
               children: <Widget>[
-                Image.asset('assets/diamond.png'),
+                // Image.asset('assets/diamond.png'),
                 SizedBox(height: 16.0),
                 Text('Tracker'),
               ],
@@ -69,9 +68,7 @@ class _LoginPageState extends State<LoginPage> {
                 labelText: 'Username',
               ),
             ),
-            // spacer
             SizedBox(height: 12.0),
-            // [Password]
             TextField(
               controller: _passwordController,
               decoration: InputDecoration(
@@ -80,15 +77,11 @@ class _LoginPageState extends State<LoginPage> {
               ),
               obscureText: true,
             ),
-            // TODO: Add button bar (101)
             ButtonBar(
-              // TODO: Add a beveled rectangular border to CANCEL (103)
               children: <Widget>[
-                // TODO: Add buttons (101)
                 FlatButton(
                   child: Text('CANCEL'),
                   onPressed: () {
-                    // TODO: Clear the text fields (101)
                     _usernameController.clear();
                     _passwordController.clear();
                   },

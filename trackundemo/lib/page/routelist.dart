@@ -18,6 +18,8 @@ class _RouteListState extends State<RouteList> {
   var _time;
   var _date;
   List list = [];
+  double flng;
+  double flat;
   Future _showDataPicker() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     Locale myLocale = Localizations.localeOf(context);
@@ -125,6 +127,8 @@ class _RouteListState extends State<RouteList> {
           prefs.setDouble('ulat' + i.toString(), list[i]['lat']);
           prefs.setDouble('ulng' + i.toString(), list[i]['lng']);
         }
+        flat = prefs.getDouble('ulat');
+        flng = prefs.getDouble('ulng');
 
         for (int i = 0; i < list.length; i++) {
           final umarker = Marker(
@@ -141,12 +145,6 @@ class _RouteListState extends State<RouteList> {
     } else {
       print('Error${response.statusCode}');
     }
-
-    // for (int i = 0; i < list.length; i++) {
-    //   prefs.remove('uname' + i.toString());
-    //   prefs.remove('ulat' + i.toString());
-    //   prefs.remove('ulng' + i.toString());
-    // }
   }
 
   @override
@@ -197,26 +195,6 @@ class _RouteListState extends State<RouteList> {
               ),
             ],
           ),
-          // child: Row(
-          //   children: <Widget>[
-          //     Card(
-          //       elevation: 3.0,
-          //       child: ListTile(
-          //         contentPadding: EdgeInsets.only(left: 10.0, right: 10.0),
-          //         title: Text('トラッカー名:'),
-          //         subtitle: Text('${widget.name}'),
-          //       ),
-          //     ),
-          //     Card(
-          //       elevation: 3.0,
-          //       child: ListTile(
-          //         contentPadding: EdgeInsets.only(left: 10.0, right: 10.0),
-          //         title: Text('位置履歴数:'),
-          //         subtitle: Text('${list.length}'),
-          //       ),
-          //     ),
-          //   ],
-          // ),
         ),
         Container(
           color: Colors.white,
@@ -229,7 +207,7 @@ class _RouteListState extends State<RouteList> {
         ),
         Container(
           color: Colors.white,
-          height: 250,
+          height: 260,
           child: GoogleMap(
             onMapCreated: _onMapCreated,
             initialCameraPosition: CameraPosition(
@@ -242,7 +220,7 @@ class _RouteListState extends State<RouteList> {
         ),
         Container(
           color: Colors.white,
-          height: 250,
+          height: 270,
           child: ListView.builder(
             itemCount: list == null ? 0 : list.length,
             itemBuilder: (context, index) {

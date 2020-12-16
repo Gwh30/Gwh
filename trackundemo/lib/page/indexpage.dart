@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,7 +8,6 @@ import 'package:trackundemo/home.dart';
 import 'package:trackundemo/login.dart';
 import 'package:trackundemo/page/detail.dart';
 import 'package:trackundemo/page/mixpage.dart';
-import 'package:trackundemo/page/routelist.dart';
 import 'package:trackundemo/util/http.dart';
 
 class IndexPage extends StatefulWidget {
@@ -19,6 +17,8 @@ class IndexPage extends StatefulWidget {
 
 class _IndexState extends State<IndexPage> {
   Map map = {};
+  String name;
+  String username;
   Future _getUserdata() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('token');
@@ -38,11 +38,22 @@ class _IndexState extends State<IndexPage> {
     );
     if (response.statusCode == 200) {
       setState(() {
-        map = json.decode(response.data);
+        map = json.decode(response.data)['userInfo'];
       });
     } else {
       print('Error${response.statusCode}');
     }
+    prefs.setString('name', map['username']);
+    prefs.setString('username', map['lastName'] + map['firstName']);
+    name = prefs.getString('name');
+    username = prefs.getString('username');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getUserdata();
+    currentIndex = 0;
   }
 
   Future loginout() async {
@@ -59,17 +70,17 @@ class _IndexState extends State<IndexPage> {
   final List<BottomNavigationBarItem> bottomNavItems = [
     BottomNavigationBarItem(
       backgroundColor: Colors.blue,
-      icon: Icon(Icons.home),
+      icon: Icon(Icons.room),
       title: Text("地図のみ"),
     ),
     BottomNavigationBarItem(
       backgroundColor: Colors.blue,
-      icon: Icon(Icons.message),
+      icon: Icon(Icons.list),
       title: Text("リストのみ"),
     ),
     BottomNavigationBarItem(
       backgroundColor: Colors.blue,
-      icon: Icon(Icons.shopping_cart),
+      icon: Icon(Icons.art_track),
       title: Text("ミックス"),
     ),
   ];
@@ -77,13 +88,6 @@ class _IndexState extends State<IndexPage> {
   int currentIndex;
 
   final pages = [HomePage(), DataList(), MixPage()];
-
-  @override
-  void initState() {
-    super.initState();
-    currentIndex = 0;
-    _getUserdata();
-  }
 
   @override
   Widget build(BuildContext context) => MaterialApp(
@@ -139,25 +143,11 @@ class _IndexState extends State<IndexPage> {
               padding: EdgeInsets.zero,
               children: <Widget>[
                 UserAccountsDrawerHeader(
-                  accountName: Text(map['userInfo']['username']),
-                  accountEmail: Text(map['userInfo']['lastName'] +
-                      map['userInfo']['firstName']),
-                  // onDetailsPressed: () {
-                  //   new PopupMenuItem(
-                  //     child: new GestureDetector(
-                  //       child: new Text("ログアウト"),
-                  //       onTap: () => loginout(),
-                  //     ),
-                  //   );
-                  //   new PopupMenuItem(
-                  //     child: new GestureDetector(
-                  //       child: new Text("ユーザー情報修正"),
-                  //     ),
-                  //   );
-                  // },
+                  accountName: Text('$name'),
+                  accountEmail: Text('$username'),
                   currentAccountPicture: CircleAvatar(
-                    backgroundImage: AssetImage('assets/img/avatar.jpg'),
-                  ),
+                      // backgroundImage: AssetImage('assets/img/avatar.jpg'),
+                      ),
                 ),
                 ListTile(
                   title: Text('ドラッカー追跡'),
