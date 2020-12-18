@@ -1,7 +1,8 @@
 import 'dart:convert';
-
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:trackundemo/util/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trackundemo/util/http.dart';
@@ -13,8 +14,12 @@ class Detail extends StatefulWidget {
 
 class _DetailState extends State<Detail> {
   var _checkValue = false;
+  var _switchValue1 = false;
+  var _switchValue2 = false;
   List<bool> _checkValues = [];
   List list = [];
+  String version;
+  Map map = {};
   Future _detail() async {
     var data = {
       'pageSize': '100',
@@ -41,7 +46,11 @@ class _DetailState extends State<Detail> {
     if (response.statusCode == 200) {
       setState(() {
         list = json.decode(response.data)['list'];
-        print(list);
+        prefs.setInt('num', list.length);
+        print(prefs.getInt('num'));
+        for (int i = 0; i < list.length; i++) {
+          prefs.setString('version' + i.toString(), list[i]["firmwareVersion"]);
+        }
       });
     } else {
       print('Error${response.statusCode}');
@@ -49,6 +58,119 @@ class _DetailState extends State<Detail> {
     for (int i = 0; i < list.length; i++) {
       _checkValues.add(false);
     }
+  }
+
+  Map lmap = {};
+  String imei;
+  int index;
+  Future getUpdata(index, imei) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    version = prefs.getString('version' + index.toString());
+    String token = prefs.getString('token');
+    var data = {'currentVersion': '$version', 'canTestVersion': 'true'};
+    RequestOptions requestOptions =
+        new RequestOptions(baseUrl: 'https://demo.trackun.jp', extra: {
+      'context': context,
+    }, headers: {
+      'Authorization': 'Bearer ${token}',
+      'Content-Type': 'application/json;charset=utf-8',
+    });
+    CancelToken cancelToken;
+    var response = await HttpUtil().get(
+      '/v1.0/version/updateTarget?currentVersion=$version&canTestVersion=true',
+      data: data,
+      options: requestOptions,
+      cancelToken: cancelToken,
+    );
+    if (response.statusCode == 200) {
+      setState(() {
+        map = json.decode(response.data);
+        if (map["errorMessage"] == null) {
+          print("no");
+        } else {
+          Fluttertoast.showToast(
+            msg: "更新できるバージョンがございません",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.CENTER,
+          );
+        }
+      });
+    } else {
+      print('Error${response.statusCode}');
+    }
+    var ldata = {
+      'pageSize': '1',
+      'pageNumber': '1',
+      'status': '1',
+      'imei': '$imei',
+    };
+    var lresponse = await HttpUtil().get(
+      '/v1.0/deviceVersion/list?pageSize=1&pageNumber=1&status=1&imei=862211044198620',
+      data: ldata,
+      options: requestOptions,
+      cancelToken: cancelToken,
+    );
+    if (lresponse.statusCode == 200) {
+      setState(() {
+        lmap = json.decode(lresponse.data);
+      });
+    } else {
+      print('Error${lresponse.statusCode}');
+    }
+  }
+
+  void showSwitch() {
+    showDialog<Null>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return new AlertDialog(
+            title: Text(
+              "位置取得手段変更",
+              style: TextStyle(fontSize: 20.0),
+            ),
+            content: new SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  SwitchListTile(
+                    secondary: const Icon(Icons.network_wifi),
+                    title: Text("WLAN"),
+                    value: _switchValue1,
+                    onChanged: (bool value) {
+                      setState(() {
+                        _switchValue1 = value;
+                      });
+                    },
+                  ),
+                  SwitchListTile(
+                    secondary: const Icon(Icons.network_cell),
+                    title: Text("LBS"),
+                    value: _switchValue2,
+                    onChanged: (bool value) {
+                      setState(() {
+                        _switchValue2 = value;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              new FlatButton(
+                child: new Text('确定'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              new FlatButton(
+                child: new Text('取消'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
   }
 
   @override
@@ -159,7 +281,12 @@ class _DetailState extends State<Detail> {
                               decoration: TextDecoration.underline,
                             ),
                           ),
-                          onTap: () {},
+                          onTap: () {
+                            return getUpdata(
+                              index = index,
+                              imei = list[index]["imei"],
+                            );
+                          },
                         ),
                       ],
                     ),
@@ -183,42 +310,16 @@ class _DetailState extends State<Detail> {
                               decoration: TextDecoration.underline,
                             ),
                           ),
-                          onTap: () {},
+                          onTap: () {
+                            return showSwitch();
+                          },
                         ),
                       ],
                     ),
                   ),
-                  // Padding(
-                  //   padding: const EdgeInsets.only(bottom: 10.0),
-                  //   child: Row(
-                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //     children: <Widget>[
-                  //       Text(
-                  //         "最後電池レベル:",
-                  //         style: TextStyle(fontSize: 12.0),
-                  //       ),
-                  //       Text(
-                  //         list[index]["batteryInfo"]["batteryPercentage"]
-                  //                 .toString() +
-                  //             "%",
-                  //         style: TextStyle(fontSize: 12.0),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
                 ],
               ),
             ),
-            // CheckboxListTile(
-            //     contentPadding: EdgeInsets.only(left: 10.0, right: 10.0),
-            //     title: Text("${index + 1}"),
-            //     activeColor: Colors.blue, //激活时的颜色
-            //     value: _checkValues[index],
-            //     onChanged: (bool val) {
-            //       setState(() {
-            //         _checkValues[index] = val;
-            //       });
-            //     }),
           );
         },
       ),

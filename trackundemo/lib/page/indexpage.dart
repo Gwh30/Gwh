@@ -6,7 +6,7 @@ import 'package:trackundemo/datalist.dart';
 import 'package:trackundemo/drawer.dart';
 import 'package:trackundemo/home.dart';
 import 'package:trackundemo/login.dart';
-import 'package:trackundemo/page/detail.dart';
+import 'package:trackundemo/page/detail/detail.dart';
 import 'package:trackundemo/page/mixpage.dart';
 import 'package:trackundemo/util/http.dart';
 
