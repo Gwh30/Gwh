@@ -14,9 +14,11 @@ class Detail extends StatefulWidget {
 
 class _DetailState extends State<Detail> {
   var _checkValue = false;
-  var _switchValue1 = false;
-  var _switchValue2 = false;
   List<bool> _checkValues = [];
+  bool _switchValue1 = false;
+  List<bool> _switchValue1list = [];
+  bool _switchValue2 = false;
+  List<bool> _switchValue2list = [];
   List list = [];
   String version;
   Map map = {};
@@ -57,6 +59,10 @@ class _DetailState extends State<Detail> {
     }
     for (int i = 0; i < list.length; i++) {
       _checkValues.add(false);
+
+      _switchValue1list.add(true);
+
+      _switchValue2list.add(true);
     }
   }
 
@@ -119,58 +125,26 @@ class _DetailState extends State<Detail> {
     }
   }
 
-  void showSwitch() {
-    showDialog<Null>(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return new AlertDialog(
-            title: Text(
-              "位置取得手段変更",
-              style: TextStyle(fontSize: 20.0),
-            ),
-            content: new SingleChildScrollView(
-              child: ListBody(
-                children: <Widget>[
-                  SwitchListTile(
-                    secondary: const Icon(Icons.network_wifi),
-                    title: Text("WLAN"),
-                    value: _switchValue1,
-                    onChanged: (bool value) {
-                      setState(() {
-                        _switchValue1 = value;
-                      });
-                    },
-                  ),
-                  SwitchListTile(
-                    secondary: const Icon(Icons.network_cell),
-                    title: Text("LBS"),
-                    value: _switchValue2,
-                    onChanged: (bool value) {
-                      setState(() {
-                        _switchValue2 = value;
-                      });
-                    },
-                  ),
-                ],
-              ),
-            ),
-            actions: <Widget>[
-              new FlatButton(
-                child: new Text('确定'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              new FlatButton(
-                child: new Text('取消'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        });
+  void showData(datashow) {
+    if (datashow != null) {
+      Text(
+        datashow,
+        style: TextStyle(
+          fontSize: 12.0,
+          color: Colors.blue,
+          decoration: TextDecoration.underline,
+        ),
+      );
+    } else {
+      Text(
+        ' データなし',
+        style: TextStyle(
+          fontSize: 12.0,
+          color: Colors.blue,
+          decoration: TextDecoration.underline,
+        ),
+      );
+    }
   }
 
   @override
@@ -267,26 +241,78 @@ class _DetailState extends State<Detail> {
                     padding: const EdgeInsets.only(bottom: 10.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
+                      children: [
                         Text(
                           "バージョン",
                           style: TextStyle(fontSize: 12.0),
                         ),
-                        GestureDetector(
-                          child: Text(
-                            list[index]["firmwareVersion"],
+                        if (list[index]["firmwareVersion"] != null)
+                          GestureDetector(
+                            child: Text(
+                              list[index]["firmwareVersion"],
+                              style: TextStyle(
+                                fontSize: 12.0,
+                                color: Colors.blue,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                            onTap: () {
+                              return getUpdata(
+                                index = index,
+                                imei = list[index]["imei"],
+                              );
+                            },
+                          ),
+                        if (list[index]["firmwareVersion"] == null)
+                          Text(
+                            "データなし",
                             style: TextStyle(
                               fontSize: 12.0,
-                              color: Colors.blue,
-                              decoration: TextDecoration.underline,
                             ),
+                          )
+                      ],
+                    ),
+                  ),
+                  Divider(),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          "ネットワーク種類:",
+                          style: TextStyle(fontSize: 12.0),
+                        ),
+                        if (list[index]["metadata"] != null &&
+                            list[index]["metadata"]["network"]["type"] == 3)
+                          Text(
+                            "eMTC",
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontSize: 12.0),
                           ),
-                          onTap: () {
-                            return getUpdata(
-                              index = index,
-                              imei = list[index]["imei"],
-                            );
-                          },
+                        if (list[index]["metadata"] == null)
+                          Text(
+                            "データなし",
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontSize: 12.0),
+                          ),
+                      ],
+                    ),
+                  ),
+                  Divider(),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          "追跡モード:",
+                          style: TextStyle(fontSize: 12.0),
+                        ),
+                        Text(
+                          "find mode",
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(fontSize: 12.0),
                         ),
                       ],
                     ),
@@ -301,19 +327,334 @@ class _DetailState extends State<Detail> {
                           "位置取得手段:",
                           style: TextStyle(fontSize: 12.0),
                         ),
-                        GestureDetector(
-                          child: Text(
-                            "GPS,LBS,WLAN",
-                            style: TextStyle(
-                              fontSize: 12.0,
-                              color: Colors.blue,
-                              decoration: TextDecoration.underline,
+                        if (list[index]["metadata"] == null ||
+                            (list[index]["metadata"]["gps"] == null ||
+                                (list[index]["metadata"]["gps"]["wifiEnable"] ==
+                                        1 &&
+                                    list[index]["metadata"]["gps"]
+                                            ["cellEnable"] ==
+                                        1)))
+                          GestureDetector(
+                            child: Text(
+                              "GPS,LBS,WLAN",
+                              style: TextStyle(
+                                fontSize: 12.0,
+                                color: Colors.blue,
+                                decoration: TextDecoration.underline,
+                              ),
                             ),
+                            onTap: () {
+                              return showDialog<Null>(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (BuildContext context) {
+                                    return StatefulBuilder(
+                                      builder: (context, setState) {
+                                        return AlertDialog(
+                                          title: Text(
+                                            "位置取得手段変更",
+                                            style: TextStyle(fontSize: 20.0),
+                                          ),
+                                          content: SingleChildScrollView(
+                                            child: ListBody(
+                                              children: <Widget>[
+                                                SwitchListTile(
+                                                  secondary: const Icon(
+                                                      Icons.network_wifi),
+                                                  title: Text("WLAN"),
+                                                  value:
+                                                      _switchValue1list[index],
+                                                  onChanged: (bool value) {
+                                                    setState(() {
+                                                      _switchValue1list[index] =
+                                                          value;
+                                                    });
+                                                  },
+                                                ),
+                                                Divider(),
+                                                SwitchListTile(
+                                                  secondary: const Icon(
+                                                      Icons.network_cell),
+                                                  title: Text("LBS"),
+                                                  value:
+                                                      _switchValue2list[index],
+                                                  onChanged: (bool value) {
+                                                    setState(() {
+                                                      _switchValue2list[index] =
+                                                          value;
+                                                    });
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          actions: <Widget>[
+                                            new FlatButton(
+                                              child: new Text('确定'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                            new FlatButton(
+                                              child: new Text('取消'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  });
+                            },
                           ),
-                          onTap: () {
-                            return showSwitch();
-                          },
-                        ),
+                        if (list[index]["metadata"] != null &&
+                            (list[index]["metadata"]["gps"] != null &&
+                                (list[index]["metadata"]["gps"]["wifiEnable"] ==
+                                        1 &&
+                                    list[index]["metadata"]["gps"]
+                                            ["cellEnable"] ==
+                                        0)))
+                          GestureDetector(
+                            child: Text(
+                              "GPS,WLAN",
+                              style: TextStyle(
+                                fontSize: 12.0,
+                                color: Colors.blue,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                            onTap: () {
+                              return showDialog<Null>(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (BuildContext context) {
+                                    return StatefulBuilder(
+                                      builder: (context, setState) {
+                                        return AlertDialog(
+                                          title: Text(
+                                            "位置取得手段変更",
+                                            style: TextStyle(fontSize: 20.0),
+                                          ),
+                                          content: SingleChildScrollView(
+                                            child: ListBody(
+                                              children: <Widget>[
+                                                SwitchListTile(
+                                                  secondary: const Icon(
+                                                      Icons.network_wifi),
+                                                  title: Text("WLAN"),
+                                                  value:
+                                                      _switchValue1list[index],
+                                                  onChanged: (bool value) {
+                                                    setState(() {
+                                                      _switchValue1list[index] =
+                                                          value;
+                                                    });
+                                                  },
+                                                ),
+                                                Divider(),
+                                                SwitchListTile(
+                                                  secondary: const Icon(
+                                                      Icons.network_cell),
+                                                  title: Text("LBS"),
+                                                  value:
+                                                      _switchValue2list[index] =
+                                                          false,
+                                                  onChanged: (bool value) {
+                                                    setState(() {
+                                                      _switchValue2list[index] =
+                                                          value;
+                                                    });
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          actions: <Widget>[
+                                            new FlatButton(
+                                              child: new Text('确定'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                            new FlatButton(
+                                              child: new Text('取消'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  });
+                            },
+                          ),
+                        if (list[index]["metadata"] != null &&
+                            (list[index]["metadata"]["gps"] != null &&
+                                (list[index]["metadata"]["gps"]["wifiEnable"] ==
+                                        0 &&
+                                    list[index]["metadata"]["gps"]
+                                            ["cellEnable"] ==
+                                        1)))
+                          GestureDetector(
+                            child: Text(
+                              "GPS,LBS",
+                              style: TextStyle(
+                                fontSize: 12.0,
+                                color: Colors.blue,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                            onTap: () {
+                              return showDialog<Null>(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (BuildContext context) {
+                                    return StatefulBuilder(
+                                      builder: (context, setState) {
+                                        return AlertDialog(
+                                          title: Text(
+                                            "位置取得手段変更",
+                                            style: TextStyle(fontSize: 20.0),
+                                          ),
+                                          content: SingleChildScrollView(
+                                            child: ListBody(
+                                              children: <Widget>[
+                                                SwitchListTile(
+                                                  secondary: const Icon(
+                                                      Icons.network_wifi),
+                                                  title: Text("WLAN"),
+                                                  value:
+                                                      _switchValue1list[index] =
+                                                          false,
+                                                  onChanged: (bool value) {
+                                                    setState(() {
+                                                      _switchValue1list[index] =
+                                                          value;
+                                                    });
+                                                  },
+                                                ),
+                                                Divider(),
+                                                SwitchListTile(
+                                                  secondary: const Icon(
+                                                      Icons.network_cell),
+                                                  title: Text("LBS"),
+                                                  value:
+                                                      _switchValue2list[index],
+                                                  onChanged: (bool value) {
+                                                    setState(() {
+                                                      _switchValue2list[index] =
+                                                          value;
+                                                    });
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          actions: <Widget>[
+                                            new FlatButton(
+                                              child: new Text('确定'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                            new FlatButton(
+                                              child: new Text('取消'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  });
+                            },
+                          ),
+                        if (list[index]["metadata"] != null &&
+                            (list[index]["metadata"]["gps"] != null &&
+                                (list[index]["metadata"]["gps"]["wifiEnable"] ==
+                                        0 &&
+                                    list[index]["metadata"]["gps"]
+                                            ["cellEnable"] ==
+                                        0)))
+                          GestureDetector(
+                            child: Text(
+                              "GPS",
+                              style: TextStyle(
+                                fontSize: 12.0,
+                                color: Colors.blue,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                            onTap: () {
+                              return showDialog<Null>(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (BuildContext context) {
+                                    return StatefulBuilder(
+                                      builder: (context, setState) {
+                                        return AlertDialog(
+                                          title: Text(
+                                            "位置取得手段変更",
+                                            style: TextStyle(fontSize: 20.0),
+                                          ),
+                                          content: SingleChildScrollView(
+                                            child: ListBody(
+                                              children: <Widget>[
+                                                SwitchListTile(
+                                                  secondary: const Icon(
+                                                      Icons.network_wifi),
+                                                  title: Text("WLAN"),
+                                                  value:
+                                                      _switchValue1list[index] =
+                                                          false,
+                                                  onChanged: (bool value) {
+                                                    setState(() {
+                                                      _switchValue1list[index] =
+                                                          value;
+                                                    });
+                                                  },
+                                                ),
+                                                Divider(),
+                                                SwitchListTile(
+                                                  secondary: const Icon(
+                                                      Icons.network_cell),
+                                                  title: Text("LBS"),
+                                                  value:
+                                                      _switchValue2list[index] =
+                                                          false,
+                                                  onChanged: (bool value) {
+                                                    setState(() {
+                                                      _switchValue2list[index] =
+                                                          value;
+                                                    });
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          actions: <Widget>[
+                                            new FlatButton(
+                                              child: new Text('确定'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                            new FlatButton(
+                                              child: new Text('取消'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  });
+                            },
+                          ),
                       ],
                     ),
                   ),

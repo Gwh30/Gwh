@@ -112,12 +112,74 @@ class _DataListState extends State<DataList> {
                             "状態:",
                             style: TextStyle(fontSize: 12.0),
                           ),
-                          Text(
-                            list[index]["batteryInfo"]["batteryPercentage"]
-                                    .toString() +
-                                "%",
-                            style: TextStyle(fontSize: 12.0),
-                          ),
+                          if (list[index]["status"] == 0)
+                            Text(
+                              "offline",
+                              style: TextStyle(fontSize: 12.0),
+                            ),
+                          if (list[index]["status"] == 2)
+                            Text(
+                              "power off",
+                              style: TextStyle(fontSize: 12.0),
+                            ),
+                          if (list[index]["status"] == 1)
+                            RichText(
+                              text: TextSpan(children: [
+                                TextSpan(
+                                  text: list[index]["batteryInfo"]
+                                              ["batteryPercentage"]
+                                          .toString() +
+                                      "%",
+                                  style: TextStyle(fontSize: 12.0),
+                                ),
+                                if (list[index]["batteryInfo"]
+                                        ["batteryPercentage"] >=
+                                    70)
+                                  WidgetSpan(
+                                      child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 2.0),
+                                    child: Icon(IconData(0xe698,
+                                        fontFamily: 'MyIcons')),
+                                  )),
+                                if (list[index]["batteryInfo"]
+                                            ["batteryPercentage"] >=
+                                        50 &&
+                                    list[index]["batteryInfo"]
+                                            ["batteryPercentage"] <
+                                        70)
+                                  WidgetSpan(
+                                      child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 2.0),
+                                    child: Icon(IconData(0xe69b,
+                                        fontFamily: 'MyIcons')),
+                                  )),
+                                if (list[index]["batteryInfo"]
+                                            ["batteryPercentage"] >=
+                                        30 &&
+                                    list[index]["batteryInfo"]
+                                            ["batteryPercentage"] <
+                                        50)
+                                  WidgetSpan(
+                                      child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 2.0),
+                                    child: Icon(IconData(0xe69a,
+                                        fontFamily: 'MyIcons')),
+                                  )),
+                                if (list[index]["batteryInfo"]
+                                        ["batteryPercentage"] <
+                                    30)
+                                  WidgetSpan(
+                                      child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 2.0),
+                                    child: Icon(IconData(0xe699,
+                                        fontFamily: 'MyIcons')),
+                                  )),
+                              ]),
+                            ),
                         ]),
                   ),
                   Padding(
@@ -154,14 +216,8 @@ class _DataListState extends State<DataList> {
                       ],
                     ),
                   ),
-                  // Text(
-                  //   list[index]["batteryInfo"]["batteryPercentage"].toString() +
-                  //       "%",
-                  //   style: TextStyle(fontSize: 12.0),
-                  // ),
                 ],
               ),
-              // trailing: Text(list[index]["watchStatus"]["status"].toString()),
             ),
           );
         },
