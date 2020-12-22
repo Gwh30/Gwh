@@ -139,11 +139,11 @@ class _DataListState extends State<DataList> {
                                       child: Padding(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 2.0),
-                                    child: Icon(IconData(0xe698,
+                                    child: Icon(IconData(0xe697,
                                         fontFamily: 'MyIcons')),
                                   )),
                                 if (list[index]["batteryInfo"]
-                                            ["batteryPercentage"] >=
+                                            ["batteryPercentage"] >
                                         50 &&
                                     list[index]["batteryInfo"]
                                             ["batteryPercentage"] <
@@ -152,20 +152,20 @@ class _DataListState extends State<DataList> {
                                       child: Padding(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 2.0),
-                                    child: Icon(IconData(0xe69b,
+                                    child: Icon(IconData(0xe696,
                                         fontFamily: 'MyIcons')),
                                   )),
                                 if (list[index]["batteryInfo"]
                                             ["batteryPercentage"] >=
                                         30 &&
                                     list[index]["batteryInfo"]
-                                            ["batteryPercentage"] <
+                                            ["batteryPercentage"] <=
                                         50)
                                   WidgetSpan(
                                       child: Padding(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 2.0),
-                                    child: Icon(IconData(0xe69a,
+                                    child: Icon(IconData(0xe695,
                                         fontFamily: 'MyIcons')),
                                   )),
                                 if (list[index]["batteryInfo"]
@@ -175,7 +175,7 @@ class _DataListState extends State<DataList> {
                                       child: Padding(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 2.0),
-                                    child: Icon(IconData(0xe699,
+                                    child: Icon(IconData(0xe694,
                                         fontFamily: 'MyIcons')),
                                   )),
                               ]),
