@@ -124,61 +124,73 @@ class _DataListState extends State<DataList> {
                             ),
                           if (list[index]["status"] == 1)
                             RichText(
-                              text: TextSpan(children: [
-                                TextSpan(
-                                  text: list[index]["batteryInfo"]
-                                              ["batteryPercentage"]
-                                          .toString() +
-                                      "%",
-                                  style: TextStyle(fontSize: 12.0),
-                                ),
-                                if (list[index]["batteryInfo"]
-                                        ["batteryPercentage"] >=
-                                    70)
-                                  WidgetSpan(
-                                      child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 2.0),
-                                    child: Icon(IconData(0xe697,
-                                        fontFamily: 'MyIcons')),
-                                  )),
-                                if (list[index]["batteryInfo"]
-                                            ["batteryPercentage"] >
-                                        50 &&
-                                    list[index]["batteryInfo"]
-                                            ["batteryPercentage"] <
-                                        70)
-                                  WidgetSpan(
-                                      child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 2.0),
-                                    child: Icon(IconData(0xe696,
-                                        fontFamily: 'MyIcons')),
-                                  )),
-                                if (list[index]["batteryInfo"]
+                              text: TextSpan(
+                                  style: Theme.of(context).textTheme.body1,
+                                  children: [
+                                    TextSpan(
+                                      text: list[index]["batteryInfo"]
+                                                  ["batteryPercentage"]
+                                              .toString() +
+                                          "%",
+                                      style: TextStyle(fontSize: 12.0),
+                                    ),
+                                    if (list[index]["batteryInfo"]
+                                            ["charging"] ==
+                                        1)
+                                      WidgetSpan(
+                                          child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 2.0),
+                                        child: const Icon(
+                                            Icons.battery_charging_full),
+                                      )),
+                                    if (list[index]["batteryInfo"]
                                             ["batteryPercentage"] >=
-                                        30 &&
-                                    list[index]["batteryInfo"]
-                                            ["batteryPercentage"] <=
-                                        50)
-                                  WidgetSpan(
-                                      child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 2.0),
-                                    child: Icon(IconData(0xe695,
-                                        fontFamily: 'MyIcons')),
-                                  )),
-                                if (list[index]["batteryInfo"]
-                                        ["batteryPercentage"] <
-                                    30)
-                                  WidgetSpan(
-                                      child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 2.0),
-                                    child: Icon(IconData(0xe694,
-                                        fontFamily: 'MyIcons')),
-                                  )),
-                              ]),
+                                        70)
+                                      WidgetSpan(
+                                          child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 2.0),
+                                        child: const Icon(IconData(0xe697,
+                                            fontFamily: 'MyIcons')),
+                                      )),
+                                    if (list[index]["batteryInfo"]
+                                                ["batteryPercentage"] >
+                                            50 &&
+                                        list[index]["batteryInfo"]
+                                                ["batteryPercentage"] <
+                                            70)
+                                      WidgetSpan(
+                                          child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 2.0),
+                                        child: const Icon(IconData(0xe696,
+                                            fontFamily: 'MyIcons')),
+                                      )),
+                                    if (list[index]["batteryInfo"]
+                                                ["batteryPercentage"] >=
+                                            30 &&
+                                        list[index]["batteryInfo"]
+                                                ["batteryPercentage"] <=
+                                            50)
+                                      WidgetSpan(
+                                          child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 2.0),
+                                        child: const Icon(IconData(0xe695,
+                                            fontFamily: 'MyIcons')),
+                                      )),
+                                    if (list[index]["batteryInfo"]
+                                            ["batteryPercentage"] <
+                                        30)
+                                      WidgetSpan(
+                                          child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 2.0),
+                                        child: const Icon(IconData(0xe694,
+                                            fontFamily: 'MyIcons')),
+                                      )),
+                                  ]),
                             ),
                         ]),
                   ),

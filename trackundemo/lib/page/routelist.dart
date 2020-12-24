@@ -273,6 +273,12 @@ class _RouteListState extends State<RouteList> {
                     leading: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
+                        // if (list == null)
+                        //   Padding(
+                        //     padding: const EdgeInsets.only(right: 10.0),
+                        //     child: Text("データなし"),
+                        //   ),
+                        // if (list != null)
                         Padding(
                           padding: const EdgeInsets.only(right: 10.0),
                           child: Text("${index + 1}"),
@@ -390,11 +396,67 @@ class _RouteListState extends State<RouteList> {
                                 style: TextStyle(fontSize: 12.0),
                               ),
                               Text(
-                                list[index]["batterypercent"].toString(),
+                                list[index]["batterypercent"].toString() + "%",
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.left,
                                 style: TextStyle(fontSize: 12.0),
                               ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 10.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "位置取得:",
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.left,
+                                style: TextStyle(fontSize: 12.0),
+                              ),
+                              if (list[index]["type"] == 1)
+                                Text(
+                                  "CELL",
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(fontSize: 12.0),
+                                ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 10.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "トリガー:",
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.left,
+                                style: TextStyle(fontSize: 12.0),
+                              ),
+                              if (list[index]["trigger"] == 6)
+                                Text(
+                                  "加速度検知中",
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(fontSize: 12.0),
+                                ),
+                              if (list[index]["trigger"] == 7)
+                                Text(
+                                  "加速度非検知中",
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(fontSize: 12.0),
+                                ),
+                              if (list[index]["trigger"] == 2)
+                                Text(
+                                  "加速度検知終了",
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(fontSize: 12.0),
+                                ),
                             ],
                           ),
                         ),

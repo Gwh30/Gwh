@@ -96,9 +96,6 @@ class HttpUtil {
     return response;
   }
 
-  /*
-               * post请求
-               */
   post(url, {data, options, cancelToken}) async {
     Response response;
     try {
@@ -107,6 +104,20 @@ class HttpUtil {
       print('post success---------${response.data}');
     } on DioError catch (e) {
       print('post error---------$e');
+      createErrorEntity(e);
+    }
+    return response;
+  }
+
+  delete(url, {data, options, cancelToken}) async {
+    Response response;
+    try {
+      response = await dio.delete(url,
+          data: data, options: options, cancelToken: cancelToken);
+
+      print('get success---------${response.data}');
+    } on DioError catch (e) {
+      print('get error---------$e');
       createErrorEntity(e);
     }
     return response;
